@@ -1,0 +1,91 @@
+
+
+.faicons {
+    position: relative;
+    height: 8em;
+    width: 18.5em;
+    text-align: center;
+    padding-top: 105px;
+    margin:auto;
+}
+
+.faicons li {
+    border:1px solid ghostwhite;
+    display: block;
+    height: 6em;
+    line-height: 4em;
+    margin: -7.3em;
+    position: absolute;
+    -webkit-transition: -webkit-transform .7s;
+    -moz-transition: -moz-transform .7s;
+    -ms-transition: -ms-transform .7s;
+    -o-transition: -o-transform .7s;
+    transition: transform 0.7s;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    text-align: center;
+    width: 6em;
+}
+
+.faicons a {
+    color: #fffdf0;
+    display: block;
+    height: 5em;
+    line-height: 8em;
+    text-align: center;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    width: 5em;
+}
+
+.faicons li:hover {
+    -webkit-transform: scale(1.2,1.2) rotate(-45deg);
+    -moz-transform: scale(1.2,1.2) rotate(-45deg);
+    -ms-transform: scale(1.2,1.2) rotate(-45deg);
+    -o-transform: scale(1.2,1.2) rotate(-45deg);
+    transform: scale(1.2,1.2) rotate(-45deg);
+}
+
+.faspot_1 {
+    border-radius: 5px;
+    background:#0077B5;
+    left: 25%;
+    top: 65px;
+}
+
+.faspot_2 {
+    border-radius: 5px;
+    background: #4267b2;
+    left: 50%;
+}
+
+.faspot_3 {
+    border-radius: 5px;
+    background: #38A1F3;
+    left: 75%;
+    top: 65px;
+}
+
+.faspot_4 {
+    border-radius: 5px;
+    background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+
+    left: 100%;
+}
+.faspot_5 {
+    border-radius: 5px;
+    background: #DC4A38;
+    left: 125%;
+    top: 65px;
+}
+
+
+
+
+
