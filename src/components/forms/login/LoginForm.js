@@ -18,11 +18,13 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        marginBottom: theme.spacing(13),
+        marginBottom: theme.spacing(5),
     },
     avatar: {
         margin: theme.spacing(1),
         backgroundColor: theme.palette.secondary.main,
+        height:'80px',
+        width:'80px'
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -33,17 +35,17 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Login() {
+export default function LoginForm() {
     const classes = useStyles();
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" style={{padding:'20px'}}>
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
+                    <LockOutlinedIcon fontSize="large"/>
                 </Avatar>
-                <Typography component="h1" variant="h5">
+                <Typography component="h1" variant="h3">
                     Logowanie
                 </Typography>
                 <form className={classes.form} noValidate>
@@ -53,7 +55,7 @@ export default function Login() {
                         required
                         fullWidth
                         id="email"
-                        label="Email Address"
+                        label="Adres Email"
                         name="email"
                         autoComplete="email"
                         autoFocus
@@ -64,7 +66,7 @@ export default function Login() {
                         required
                         fullWidth
                         name="password"
-                        label="Password"
+                        label="Hasło"
                         type="password"
                         id="password"
                         autoComplete="current-password"
@@ -77,7 +79,7 @@ export default function Login() {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        color="primary"
+                        color="secondary"
                         className={classes.submit}
                     >
                         Zaloguj
