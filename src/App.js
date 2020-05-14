@@ -26,8 +26,8 @@ function App() {
             <Route exact path="/" component={SpecialistHeader}/>
 
             {/*<Route exact path="/" component={MainBanner}/>*/}
-            {/*<Route exact path="/" component={Profile}/>*/}
-            <Route exact path="/" component={Register}/>
+            <Route exact path="/" component={Profile}/>
+            {/*<Route exact path="/" component={Register}/>*/}
             {/*<Route exact path="/" component={Map}/>*/}
             <Route exact path="/" component={StaticFooter}/>
 
