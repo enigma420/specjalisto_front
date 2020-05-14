@@ -13,8 +13,8 @@ class RatingLineChart extends Component {
             options: {
                 chart: {
 
-                    height: 250,
-                    width:300,
+                    height: 200,
+                    width:250,
                     type: 'line',
                     zoom: {
                         enabled: true
@@ -47,7 +47,7 @@ class RatingLineChart extends Component {
     render() {
         return (
             <div id="chart" >
-                <Chart options={this.state.options} series={this.state.series} type="line" height={250} width={450} />
+                <Chart options={this.state.options} series={this.state.series} type="line" height={240} width={400} />
             </div>
         );
     }

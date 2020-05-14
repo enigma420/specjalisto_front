@@ -5,13 +5,104 @@ import {
     MDBCarouselInner,
     MDBCarouselItem,
 } from 'mdbreact';
-
+import Chart from "react-apexcharts";
 import Paper from "@material-ui/core/Paper";
 import Rating from "@material-ui/lab/Rating";
 import {makeStyles} from '@material-ui/core/styles';
 
 import '../profile/SpecialistRating.css'
 import RatingLineChart from "./RatingLineChart";
+
+
+
+
+const seriesOpt = {
+
+    optionsRadial: {
+        plotOptions: {
+            radialBar: {
+
+                hollow: {
+                    margin: 0,
+                    size: "80%",
+                    background: "#fff",
+                    image: undefined,
+                    imageOffsetX: 0,
+                    imageOffsetY: 0,
+                    position: "front",
+                    dropShadow: {
+                        enabled: true,
+                        top: 3,
+                        left: 0,
+                        blur: 4,
+                        opacity: 0.5
+                    }
+                },
+                track: {
+                    background: "#fff",
+                    strokeWidth: "67%",
+                    margin: 0, // margin is in pixels
+                    dropShadow: {
+                        enabled: true,
+                        top: -3,
+                        left: 0,
+                        blur: 4,
+                        opacity: 0.65
+                    }
+                },
+
+                dataLabels: {
+                    showOn: "always",
+                    name: {
+                        offsetY: -20,
+                        show: true,
+                        color: "black",
+                        fontSize: "18px"
+                    },
+                    value: {
+                        formatter: function(val) {
+                            return val;
+                        },
+                        color: "#db4a39",
+                        fontSize: "50px",
+                        show: true
+                    }
+                }
+            }
+        },
+        fill: {
+            type: "gradient",
+            gradient: {
+                shadeIntensity: 0.1,
+                gradientToColors: ["#db4a39"],
+                opacityFrom: 1,
+                opacityTo: 1,
+                stops: [0, 10]
+            }
+        },
+        stroke: {
+            lineCap: "round"
+        },
+        labels: ["Ogólna Ocena"]
+    },
+    seriesRadial: [76],
+
+
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,7 +149,7 @@ const GeneralRatingSpecialist = () => {
         <div className="row " style={{margin:'15px 0 0 35px'}}>
             <div className="col-sm-6 rating-block" style={{background: '#ffe6e6', border: '1px solid #fa8484',borderRadius:'5px'}}>
                 <div className="pull-left ">
-                    <div className="pull-left">1</div>
+
                     <div className="pull-left" style={{width: "180px"}}>
                         <div className="progress" style={{height: "9px", margin: "8px 0"}}>
                             <div className="progress-bar success-color-dark" role="progressbar"
@@ -71,16 +162,12 @@ const GeneralRatingSpecialist = () => {
                         </div>
 
                     </div>
-                    <span className="pull-left" style={{width: "35px", lineHeight: 1}}>
+                    <span className="pull-left" style={{width: "35px", lineHeight: 1,marginLeft:'10px'}}>
                                 <Rating name="read-only" value={5} max={5} size="large" readOnly/>
                             </span>
 
                 </div>
                 <div className="pull-left">
-                    <div className="pull-left" style={{width: "35px", lineHeight: 1}}>
-                        <Rating name="read-only" value={4} max={4} size="large" readOnly/>
-
-                    </div>
                     <div className="pull-left" style={{width: '180px'}}>
                         <div className="progress" style={{height: "9px", margin: "8px 0"}}>
                             <div className="progress-bar success-color" role="progressbar"
@@ -90,13 +177,13 @@ const GeneralRatingSpecialist = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="pull-right" style={{marginLeft: "10px"}}>1</div>
+                    <span className="pull-left" style={{width: "35px", lineHeight: 1,marginLeft:'10px'}}>
+                        <Rating name="read-only" value={4} max={4} size="large" readOnly/>
+
+                    </span>
                 </div>
                 <div className="pull-left">
-                    <div className="pull-left" style={{width: "35px", lineHeight: 1}}>
-                        <Rating name="read-only" value={3} max={3} size="large" readOnly/>
 
-                    </div>
                     <div className="pull-left" style={{width: "180px"}}>
                         <div className="progress" style={{height: "9px", margin: "8px 0"}}>
                             <div className="progress-bar yellow" role="progressbar"
@@ -106,12 +193,13 @@ const GeneralRatingSpecialist = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="pull-right" style={{marginLeft: "10px"}}>0</div>
+                    <div className="pull-left" style={{width: "35px", lineHeight: 1,marginLeft:'10px'}}>
+                        <Rating name="read-only" value={3} max={3} size="large" readOnly/>
+
+                    </div>
                 </div>
                 <div className="pull-left">
-                    <div className="pull-left" style={{width: "35px", lineHeight: 1}}>
-                        <Rating name="read-only" value={2} max={2} size="large" readOnly/>
-                    </div>
+
                     <div className="pull-left" style={{width: "180px"}}>
                         <div className="progress" style={{height: "9px", margin: "8px 0"}}>
                             <div className="progress-bar danger-color" role="progressbar"
@@ -121,12 +209,12 @@ const GeneralRatingSpecialist = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="pull-right" style={{marginLeft: "10px"}}>0</div>
+                    <div className="pull-left" style={{width: "35px", lineHeight: 1,marginLeft:'10px'}}>
+                        <Rating name="read-only" value={2} max={2} size="large" readOnly/>
+                    </div>
                 </div>
                 <div className="pull-left">
-                    <div className="pull-left" style={{width: "35px", lineHeight: 1}}>
-                        <Rating name="read-only" value={1} max={1} size="large" readOnly/>
-                    </div>
+
                     <div className="pull-left" style={{width: "180px"}}>
                         <div className="progress" style={{height: "9px", margin: "8px 0"}}>
                             <div className="progress-bar danger-color-dark" role="progressbar"
@@ -136,7 +224,9 @@ const GeneralRatingSpecialist = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="pull-right" style={{marginLeft: "10px"}}>0</div>
+                    <div className="pull-left" style={{width: "35px", lineHeight: 1,marginLeft:'10px'}}>
+                        <Rating name="read-only" value={1} max={1} size="large" readOnly/>
+                    </div>
                 </div>
             </div>
             <div className="col-sm-6">
@@ -146,7 +236,15 @@ const GeneralRatingSpecialist = () => {
                     <Rating name="read-only" value={4} size="large" readOnly/>
                 </div>
             </div>
-<RatingLineChart/>
+                <RatingLineChart/>
+                    <Chart
+                        options={seriesOpt.optionsRadial}
+                        series={seriesOpt.seriesRadial}
+                        type="radialBar"
+                        width="240"
+                        style={{marginTop:'30px'}}
+                    />
+
         </div>
     )
 };
@@ -240,8 +338,10 @@ const Opinions = () => {
                         style={{color:'black'}}
                         showControls={false}
                         showIndicators={false}
+
                     >
-                        <MDBCarouselInner>
+                        <MDBCarouselInner
+                        >
                             <MDBCarouselItem itemId='1'>
                                 <h4 className='font-weight-bold'>Anna Deynah</h4>
                                 <img
@@ -249,6 +349,7 @@ const Opinions = () => {
                                     className='rounded-circle img-fluid'
                                     alt=''
                                     width="120px"
+                                    style={{boxShadow:'0 0 15px 1px rgba(0,0,0,0.49)'}}
                                 />
 <div> <Rating name="read-only" value={5} size="large" readOnly/></div>
                                 <div >
@@ -268,7 +369,8 @@ const Opinions = () => {
                                     src='https://mdbootstrap.com/img/Photos/Avatars/img%20(31).jpg'
                                     className='rounded-circle img-fluid'
                                     alt=''
-                                    width="150px"
+                                    width="120px"
+                                    style={{boxShadow:'0 0 15px 1px rgba(0,0,0,0.49)'}}
                                 />
                                 <div> <Rating name="read-only" value={5} size="large" readOnly/></div>
                                 <p>
@@ -287,7 +389,8 @@ const Opinions = () => {
                                     src='https://mdbootstrap.com/img/Photos/Avatars/img%20(3).jpg'
                                     className='rounded-circle img-fluid'
                                     alt=''
-                                    width="150px"
+                                    width="120px"
+                                    style={{boxShadow:'0 0 15px 1px rgba(0,0,0,0.49)'}}
                                 />
                                 <div> <Rating name="read-only" value={3} size="large" readOnly/></div>
                                 <p>
