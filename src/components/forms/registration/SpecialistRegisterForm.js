@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -20,6 +20,22 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 
+
+export const useInput = initialValue => {
+    const [value, setValue] = useState(initialValue);
+
+    return {
+        value,
+        setValue,
+        reset: () => setValue(""),
+        bind: {
+            value,
+            onChange: event => {
+                setValue(event.target.value);
+            }
+        }
+    };
+};
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -95,7 +111,15 @@ function getStepContent(step) {
 }
 
 
-export default function SpecialistRegisterForm() {
+export default function SpecialistRegisterForm(props) {
+    const { val, bind, reset } = useInput('');
+    const handleSubmit = (evt) => {
+        evt.preventDefault();
+        alert(`Submitting Name ${value}`);
+        reset();
+    }
+
+
     const classes = useStyles();
     const [value, setValue] = React.useState('female');
 
@@ -105,10 +129,12 @@ export default function SpecialistRegisterForm() {
     const registerFirstStep = () => {
         return (
             <Paper md={5} style={{padding: '20px', minWidth: '550px'}}>
-                <form noValidate>
+                <form onSubmit={handleSubmit}>
                     <Grid container spacing={3}>
                         <Grid item xs={8} sm={4}>
                             <TextField
+                                type="text"
+                                {...bind}
                                 autoComplete="fname"
                                 name="firstName"
                                 variant="outlined"
@@ -128,6 +154,8 @@ export default function SpecialistRegisterForm() {
                         </Grid>
                         <Grid item xs={8} sm={4}>
                             <TextField
+                                type="text"
+                                {...bind}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -154,6 +182,8 @@ export default function SpecialistRegisterForm() {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
+                                type="text"
+                                {...bind}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -172,6 +202,8 @@ export default function SpecialistRegisterForm() {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
+                                type="text"
+                                {...bind}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -189,6 +221,8 @@ export default function SpecialistRegisterForm() {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
+                                type="text"
+                                {...bind}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -207,6 +241,8 @@ export default function SpecialistRegisterForm() {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
+                                type="text"
+                                {...bind}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -224,6 +260,8 @@ export default function SpecialistRegisterForm() {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
+
+                                {...bind}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -243,6 +281,8 @@ export default function SpecialistRegisterForm() {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
+                                type="text"
+                                {...bind}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -261,8 +301,9 @@ export default function SpecialistRegisterForm() {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
+                                type="text"
+                                {...bind}
                                 variant="outlined"
-
                                 required
                                 fullWidth
                                 name="profession"
@@ -278,31 +319,33 @@ export default function SpecialistRegisterForm() {
                                 }}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl variant="outlined" className={classes.formControl}>
-                                <InputLabel htmlFor="outlined-age-native-simple" style={{fontSize: '16px'}}>Lata
-                                    Doświadczenia</InputLabel>
-                                <Select
-                                    native
-                                    onChange={handleChange}
-                                    label="Lata Doświadczenia"
+                        {/*<Grid item xs={12} sm={6}>*/}
+                        {/*    <FormControl variant="outlined" className={classes.formControl}>*/}
+                        {/*        <InputLabel htmlFor="outlined-age-native-simple" style={{fontSize: '16px'}}>Lata*/}
+                        {/*            Doświadczenia</InputLabel>*/}
+                        {/*        <Select*/}
+                        {/*            native*/}
+                        {/*            onChange={handleChange}*/}
+                        {/*            label="Lata Doświadczenia"*/}
 
-                                >
-                                    <option aria-label="None" value=""/>
-                                    <option value={1}>0</option>
-                                    <option value={2}>0 - 1</option>
-                                    <option value={3}>1 - 2</option>
-                                    <option value={4}>2 - 3</option>
-                                    <option value={5}>3 - 5</option>
-                                    <option value={6}>5 - 8</option>
-                                    <option value={7}>8 - 10</option>
-                                    <option value={8}>10 - 15</option>
-                                    <option value={9}>15+</option>
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                        {/*        >*/}
+                        {/*            <option aria-label="None" value=""/>*/}
+                        {/*            <option value={1}>0</option>*/}
+                        {/*            <option value={2}>0 - 1</option>*/}
+                        {/*            <option value={3}>1 - 2</option>*/}
+                        {/*            <option value={4}>2 - 3</option>*/}
+                        {/*            <option value={5}>3 - 5</option>*/}
+                        {/*            <option value={6}>5 - 8</option>*/}
+                        {/*            <option value={7}>8 - 10</option>*/}
+                        {/*            <option value={8}>10 - 15</option>*/}
+                        {/*            <option value={9}>15+</option>*/}
+                        {/*        </Select>*/}
+                        {/*    </FormControl>*/}
+                        {/*</Grid>*/}
                         <Grid item xs={12} sm={6}>
                             <TextField
+                                type="text"
+                                {...bind}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -320,6 +363,8 @@ export default function SpecialistRegisterForm() {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
+                                type="text"
+                                {...bind}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -353,6 +398,8 @@ export default function SpecialistRegisterForm() {
                         <div style={{textAlign: 'center'}}>
                                 <span style={{margin: '5px'}}>
                                                     <Button
+                                                        type="submit"
+                                                        value="Submit"
                                                         variant="contained"
                                                         color="secondary"
                                                         onClick={handleNext}
@@ -367,9 +414,9 @@ export default function SpecialistRegisterForm() {
                     </div>
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link href="#" variant="body2" style={{fontSize: '13px'}}>
+                            <a href="#" variant="body2" style={{fontSize: '13px'}}>
                                 Posiadasz już konto? Zaloguj się
-                            </Link>
+                            </a>
                         </Grid>
                     </Grid>
                 </form>
@@ -410,9 +457,9 @@ export default function SpecialistRegisterForm() {
                     </Button>
                     <Grid container justify="flex-end" style={{padding: '5px'}}>
                         <Grid item>
-                            <Link href="#" variant="body2" style={{fontSize: '13px'}}>
+                            <a href="#" variant="body2" style={{fontSize: '13px'}}>
                                 Wyślij kod potwierdzający ponownie
-                            </Link>
+                            </a>
                         </Grid>
                     </Grid>
                 </div>
@@ -460,9 +507,9 @@ export default function SpecialistRegisterForm() {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
+    // const handleBack = () => {
+    //     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    // };
 
     return (
         <Paper md={3} style={{padding: '80px 0 0 150px'}}>

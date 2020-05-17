@@ -303,9 +303,9 @@ export default function CustomerRegisterForm() {
                     </Button>
                     <Grid container justify="flex-end" style={{padding: '5px'}}>
                         <Grid item>
-                            <Link href="#" variant="body2" style={{fontSize:'13px'}}>
+                            <a href="#" variant="body2" style={{fontSize:'13px'}}>
                                 Wyślij kod potwierdzający ponownie
-                            </Link>
+                            </a>
                         </Grid>
                     </Grid>
                 </div>

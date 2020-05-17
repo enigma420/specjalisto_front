@@ -48,9 +48,9 @@ export default class Map extends Component {
                                         <li id="mazowieckie">
                                             Stan: 12853 Specjalistów
                                             <Grid item>
-                                                <Link href="#" variant="body2">
+                                                <a href="#" variant="body2">
                                                     Szczegolowy wykaz specjalistow
-                                                </Link>
+                                                </a>
                                             </Grid>
                                         </li>
                                     </div>
