@@ -1,27 +1,21 @@
-import React from 'react';
+import React,{ useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
-import Radio from '@material-ui/core/Radio';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import StepContent from '@material-ui/core/StepContent';
+import {createCommission} from '../../../actions/commissionActions'
 import Paper from '@material-ui/core/Paper';
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import {number} from "prop-types";
+import {useInput} from "../../hooks/inputFormHook";
+import CommissionService from "../../../services/CommissionService";
+import CommissionActions from "../../../actions/commissionActions";
+import http from "../../../http-common";
+import {GET_ERRORS} from "../../../actions/types";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -63,45 +57,74 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
-function getSteps() {
-    return ['Formularz Zleceniowy', 'Potwierdzenie Utworzenia Zlecenia', 'Zlecenie Utworzone'];
-}
-
-function getStepContent(step) {
-    switch (step) {
-        case 0:
-            return `Proszę wypełnić formularz zleceniowy w celu utworzenia zlecenia.
-            Pola oznaczone gwiazdką są obowiązkowe!`;
-        case 1:
-            return 'Na podany adres email został wysłany kod potwierdzający, który należy podać.';
-        case 2:
-            return `Zlecenie zostalo pomyslnie utworzone. Dziękujemy !`;
-        default:
-            return 'Niezidentyfikowany krok';
-    }
-}
-
-
-
-
 export default function CommissionForm() {
     const classes = useStyles();
-    const [value, setValue] = React.useState();
 
-    const handleChange = (event) => {
-        setValue(event.target.value);
+    const initialCommissionState = {
+        title: '',
+        description: '',
+        city: '',
+        profession: '',
+        errors: {}
     };
+
+    const [commission,setCommission] = useState(initialCommissionState);
+    const [submitted,setSubmitted] = useState(false);
+    const [isLoadingDuringFilled,setLoadingDuringFilled] = useState(true);
+    const [isLoadingAfterClickCreateCommission, setLoadingAfterClickCreateCommission] = useState(false);
+
+    const handleInputChange = (e) => {
+        setLoadingDuringFilled(true);
+        const{name,value} = e.target;
+        setCommission({...commission, [name]:value});
+    };
+
+
+
+    const saveCommission = () => {
+        var data = {
+            title: commission.title,
+            description: commission.description,
+            city: commission.city,
+            profession: commission.profession
+        };
+
+
+
+        CommissionService.create(data)
+            .then(response => {
+            setCommission({
+                title: response.data.title,
+                description: response.data.description,
+                city: response.data.city,
+                profession: response.data.profession
+            });
+            setSubmitted(true);
+            console.log(response.data);
+            })
+
+    };
+
+    const newCommission = () => {
+        setCommission(initialCommissionState);
+        setSubmitted(false);
+    };
+
     const registerFirstStep = () => {
         return (
             <div>
-                <CssBaseline/>
-                <div className="row">
-
-                    <form className={classes.form} noValidate>
+                {submitted ? (
+                    <div>
+                        <h1> SUCCESSFULLY CREATE COMMISSION</h1>
+                    </div>
+                ) : (
+                    <div className="row">
                         <Grid container spacing={2}>
                             <Grid item xs={8} sm={12}>
                                 <TextField
+                                    type="text"
+                                    onChange={handleInputChange}
+                                    value={commission.title}
                                     name="title"
                                     variant="outlined"
                                     required
@@ -116,26 +139,35 @@ export default function CommissionForm() {
 
                             <Grid item xs={12} sm={6}>
                                 <TextField
+                                    type="text"
+                                    onChange={handleInputChange}
+                                    value={commission.profession}
                                     variant="outlined"
                                     required
                                     fullWidth
-                                    name="professionOfCommission"
+                                    name="profession"
                                     label="Dziedzina Zlecenia"
                                     id="professionOfCommission"
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <TextField
+                                    type="text"
+                                    onChange={handleInputChange}
+                                    value={commission.city}
                                     variant="outlined"
                                     required
                                     fullWidth
                                     id="cityOfCommission"
                                     label="Miasto Zlecenia"
-                                    name="cityOfCommission"
+                                    name="city"
                                 />
                             </Grid>
                             <Grid item xs={12} sm={12} >
                                 <TextField
+                                    type="text"
+                                    onChange={handleInputChange}
+                                    value={commission.description}
                                     variant="outlined"
                                     required
                                     fullWidth
@@ -146,57 +178,17 @@ export default function CommissionForm() {
                                     rows="8"
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    name="price"
-                                    label="Cena wstepna (do negocjacji)"
-                                    type="numeric"
-                                    id="price"
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    style={{width:'300px'}}
-                                    size="large"
-                                    label="Czas trwania zlecenia w dniach"
-                                    type="number"
-                                    name="deadline"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />
-                            </Grid>
+
                         </Grid>
-                        <div className={classes.actionsContainer}>
-                            <div style={{textAlign: 'center'}}>
-                                <span style={{margin: '5px'}}>
-                                                    <Button
-                                                        variant="contained"
-                                                        color="secondary"
-                                                        onClick={handleNext}
-                                                        className={classes.submit}
-                                                        size="large"
-                                                    >
-                                                        {activeStep === steps.length - 1 ? 'Zakończ' : 'Dalej'}
-                                                    </Button>
-                                                </span>
-                            </div>
-                        </div>
                         <Button
                             type="submit"
+                            onClick={saveCommission}
                             fullWidth
                             variant="contained"
                             color="secondary"
                             className={classes.submit}
-                            onClick={handleNext}
                         >
-                            Sign Up
+                            Submit
                         </Button>
                         <Grid container justify="flex-end">
                             <Grid item>
@@ -205,95 +197,13 @@ export default function CommissionForm() {
                                 </Link>
                             </Grid>
                         </Grid>
-                    </form>
-                </div>
-            </div>
-        )
-    };
-    const registerConfirmationSecondStep = () => {
-        return (
-            <div>
-                <Paper md={5} style={{padding: '20px'}}>
-                    <Typography align="center" style={{padding: '5px', fontSize: '22px', fontWeight: 'bolder'}}>Proszę
-                        wprowadzić kod potwierdzający wysłany na Email</Typography>
-                    <div style={{textAlign: 'center'}}>
-                        <TextField
-                            style={{margin: '5px'}}
-                            variant="outlined"
-                            required
-                            name="confirmMailCode"
-                            label="Kod Potwierdzający"
-                            className={classes.submit}
-                            type="password"
-                            size="small"
-                        />
-                        <Button
-                            style={{margin: '5px'}}
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleNext}
-                            className={classes.submit}
-                            size="large"
-                        >
-                            {activeStep === steps.length - 1 ? 'Zakończ' : 'Dalej'}
-                        </Button>
-                        <Grid container justify="flex-start" style={{padding: '5px'}}>
-                            <Grid item>
-                                <Link href="#" variant="body2">
-                                    Wyślij kod potwierdzający ponownie
-                                </Link>
-                            </Grid>
-                        </Grid>
+
                     </div>
+                )}
 
-                </Paper>
             </div>
         )
     };
-    const registerThanksFinalStep = () => {
-        return (
-            <div>
-                <Paper md={5} style={{padding: '20px', textAlign: 'center'}}>
-                    <Typography align="center" style={{padding: '5px', fontSize: '28px', fontWeight: 'bolder'}}>Dziękujemy
-                        bardzo za utworzenie zlecenia w naszym serwisie !!!</Typography>
-                    <Button
-                        style={{margin: '5px'}}
-                        variant="contained"
-                        color="secondary"
-                        onClick={handleNext}
-                        className={classes.submit}
-                        size="large"
-                    >
-                        {activeStep === steps.length - 1 ? 'Zakończ' : 'Dalej'}
-                    </Button>
-                </Paper>
-            </div>
-        )
-    };
-    function getStepFormContent(step){
-        switch (step) {
-            case 0:
-                return <>{registerFirstStep()}</>;
-            case 1:
-                return <>{registerConfirmationSecondStep()}</>;
-            case 2:
-                return <>{registerThanksFinalStep()}</>;
-            default:
-                return 'Niezidentyfikowany krok'
-        }
-    }
-
-    const [activeStep, setActiveStep] = React.useState(0);
-    const steps = getSteps();
-
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
     return (
         <Paper md={3}  style={{padding: '150px'}}>
             <div className="row">
@@ -305,23 +215,9 @@ export default function CommissionForm() {
                         <Typography variant="h2" style={{fontWeight:'bolder'}}>
                             Utworzenie Zlecenia
                         </Typography>
-                        <Stepper activeStep={activeStep} orientation="vertical">
-                            {steps.map((label, index) => (
-                                <Step key={label}>
-                                    <StepLabel>{label}</StepLabel>
-                                    <StepContent>
-                                        <Typography>{getStepContent(index)}</Typography>
-                                        <div style={{padding:'30px'}}>{getStepFormContent(index)}</div>
+                                        <Typography>{registerFirstStep()}</Typography>
 
-                                    </StepContent>
-                                </Step>
-                            ))}
-                        </Stepper>
-                        {activeStep === steps.length && (
-                            <Paper square elevation={0} className={classes.resetContainer}>
-                                <Typography style={{fontSize:'20px',fontWeight:'bolder'}}>Wszelkie kroki procesu rejestracji zostały ukończone</Typography>
-                            </Paper>
-                        )}
+
                     </div>
 
                 </div>
@@ -330,3 +226,32 @@ export default function CommissionForm() {
         </Paper>
     );
 }
+
+
+
+{/*<Grid item xs={12} sm={6}>*/}
+{/*    <TextField*/}
+{/*        variant="outlined"*/}
+{/*        required*/}
+{/*        fullWidth*/}
+{/*        name="price"*/}
+{/*        label="Cena wstepna (do negocjacji)"*/}
+{/*        type="numeric"*/}
+{/*        id="price"*/}
+{/*    />*/}
+{/*</Grid>*/}
+{/*<Grid item xs={12} sm={6}>*/}
+{/*    <TextField*/}
+{/*        variant="outlined"*/}
+{/*        required*/}
+{/*        fullWidth*/}
+{/*        style={{width:'300px'}}*/}
+{/*        size="large"*/}
+{/*        label="Czas trwania zlecenia w dniach"*/}
+{/*        type="number"*/}
+{/*        name="deadline"*/}
+{/*        InputLabelProps={{*/}
+{/*            shrink: true,*/}
+{/*        }}*/}
+{/*    />*/}
+{/*</Grid>*/}

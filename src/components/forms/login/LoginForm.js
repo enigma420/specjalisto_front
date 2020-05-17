@@ -86,14 +86,14 @@ export default function LoginForm() {
                     </Button>
                     <Grid container>
                         <Grid item xs>
-                            <Link href="#" variant="body2">
+                            <a href="#" variant="body2">
                                 Zapomniałeś hasła?
-                            </Link>
+                            </a>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <a href="#" variant="body2">
                                 {"Nie posiadasz konta? Zarejestruj się!"}
-                            </Link>
+                            </a>
                         </Grid>
                     </Grid>
                 </form>

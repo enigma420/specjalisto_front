@@ -10,13 +10,13 @@ import red from "@material-ui/core/colors/red";
 import headerIcon from "../../specjalist-icons.png";
 import Logo from "../small_components/Logo";
 import MenuItem from "@material-ui/core/MenuItem";
+import {Link} from "react-router-dom";
 
 const theme = createMuiTheme({
     palette: {
         primary: red
     },
 });
-
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: theme.spacing(12)
     },
 }));
+
 
 export default function UserHeader() {
 
@@ -44,11 +45,11 @@ export default function UserHeader() {
                             Znajdź Specjalistę ze swojej okolicy !
                         </Typography>
                         <MenuItem >
-                            <Button variant="outlined" color="inherit">Jesteś Specjalistą?</Button>
+                            <a to="/specialist_register"> <Button variant="outlined" color="inherit">Jesteś Specjalistą?</Button></a>
                         </MenuItem>
-                        <Button variant="outlined" color="inherit">Zaloguj się</Button>
+                        <a to="/login">  <Button variant="outlined" color="inherit">Zaloguj się</Button></a>
                         <MenuItem>
-                            <Button variant="outlined" color="inherit">Zarejestruj się</Button>
+                            <a to="/customer_register"><Button variant="outlined" color="inherit">Zarejestruj się</Button></a>
                         </MenuItem>
                     </Toolbar>
                 </AppBar>
