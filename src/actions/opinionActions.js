@@ -1,10 +1,10 @@
 import axios from "axios";
 import {GET_ERRORS,GET_OPINION,GET_OPINIONS,DELETE_OPINION} from "./types";
 
-export const createOpinion = (opinion,history) => async dispatch => {
+export const create = (opinion,history) => async dispatch => {
 
     try {
-        await axios.post("/api/opinion/add",opinion);
+        await axios.post("http://localhost:8080/api/opinion/add",opinion);
         history.push("/"); //Set output endpoint
         dispatch({
             type:GET_ERRORS,
@@ -21,7 +21,7 @@ export const createOpinion = (opinion,history) => async dispatch => {
 export const editOpinion = (opinion,history) => async dispatch => {
 
     try{
-        await axios.post("/api/opinion/edit",opinion);
+        await axios.post("http://localhost:8080/api/opinion/edit",opinion);
         history.push("/"); //Set output endpoint
         dispatch({
             type:GET_ERRORS,
@@ -38,7 +38,7 @@ export const editOpinion = (opinion,history) => async dispatch => {
 export const getOpinion = (opinionId,history) => async dispatch =>{
 
     try {
-        const res = await axios.get(`/api/opinion/get/${opinionId}`);
+        const res = await axios.get(`http://localhost:8080/api/opinion/get/${opinionId}`);
         dispatch({
             type: GET_OPINION,
             payload: res.data
@@ -60,7 +60,7 @@ export const deleteOpinion = (opinionId) => async dispatch => {
     if(window.confirm(
         "Czy jesteś pewien? Usunięcie skutkuje trwałym zniknięciem zlecenia"
     )){
-        await axios.delete(`/api/opinion/delete/${opinionId}`);
+        await axios.delete(`http://localhost:8080/api/opinion/delete/${opinionId}`);
         dispatch({
             type: DELETE_OPINION,
             payload: opinionId

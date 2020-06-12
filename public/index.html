@@ -25,7 +25,9 @@
     <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css" />
     <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-     <script type="text/javascript">$(document).ready(function() {$("#map-poland").CSSMap({"size": 430, "mapStyle":"default", "tooltips":"floating", "responsive":"auto", "cities":true, "mobileSupport":true, "loadingText":"Loading ...", "authorInfo":false, "disableClicks":false, "visibleList":{"enable":true, "listPosition":"left", "columns":1, "columnWidth":250}, "agentsList":{"enable":true, "agentsListId":"#demo-agents", "agentsListOnHover":true}});});</script>
+     <script type="text/javascript">
+       $.noConflict();
+       $(document).ready(function() {$("#map-poland").CSSMap({"size": 650, "mapStyle":"default", "tooltips":"floating", "responsive":"auto", "cities":true, "mobileSupport":true, "loadingText":"Loading ...", "authorInfo":false, "disableClicks":false, "visibleList":{"enable":true, "listPosition":"left", "columns":1, "columnWidth":250}, "agentsList":{"enable":true, "agentsListId":"#demo-agents", "agentsListOnHover":true}});});</script>
     <title>React App</title>
   </head>
   <body>

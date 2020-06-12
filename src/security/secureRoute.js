@@ -3,7 +3,7 @@ import React from "react";
 import {connect} from "react-redux";
 import PropTypes from "prop-types"
 
-const securedRoute = ({ component: Component, security, ...otherProps}) => {
+const securedRoute = ({ component: Component, security, ...otherProps}) => (
     <Route
         {...otherProps}
         render={props =>
@@ -14,7 +14,7 @@ const securedRoute = ({ component: Component, security, ...otherProps}) => {
         )}
 
         />
-};
+);
 
 securedRoute.propTypes = {
     security: PropTypes.object.isRequired

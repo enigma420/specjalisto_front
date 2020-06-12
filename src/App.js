@@ -5,19 +5,28 @@ import { BrowserRouter as Router,Route,Switch } from "react-router-dom";
 import setJwtToken from "./security/setJwtToken";
 import {SET_CURRENT_USER} from "./actions/types";
 import Provider from "react-redux/es/components/Provider";
-import UserHeader from "./components/header/UserHeader";
+import GuestHeader from "./components/header/GuestHeader";
 import StaticFooter from "./components/footer/StaticFooter";
-import Dashboard from "./components/Dashboard";
-import Search from "./components/Search";
+import Search from "./components/landing/Search";
 import store from "./store"
 import {logout} from "./actions/securityActions";
 import jwt_decode from "jwt-decode";
-import Map from "./components/map/Map";
-import MainBanner from "./components/MainBanner";
-import LoginForm from "./components/forms/login/LoginForm";
+import LandingMap from "./components/map/LandingMap";
+import MainBanner from "./components/landing/MainBanner";
 import CustomerRegisterForm from "./components/forms/registration/CustomerRegisterForm";
 import SpecialistRegisterForm from "./components/forms/registration/SpecialistRegisterForm";
-import CommissionForm from "./components/forms/commission/CommissionForm";
+import Login from "./components/forms/login/Login";
+import Profile from "./components/profile/Profile";
+import SpecialistHeader from "./components/header/SpecialistHeader";
+import UserHead from "./components/header/Header";
+import CreateCommissionButton from "./components/commission/CreateCommissionButton";
+import CommissionDashboard from "./components/commission/CommissionList";
+import CreateCommission from "./components/forms/commission/CreateCommission";
+import EditCommission from "./components/forms/commission/EditCommission";
+import CreateOpinion from "./components/forms/opinion/CreateOpinion";
+import SearchCommissions from "./search/commission/SearchCommissions";
+import Commissions from "./search/commission/Commissions";
+import Specialists from "./search/specialist/Specialists";
 
 const jwtToken = localStorage.jwtToken;
 
@@ -42,36 +51,39 @@ function App() {
 
   return (
     <div className="App">
-{/*<Provider store={store}>*/}
-{/*    <Router>*/}
-{/*        <div>*/}
+<Provider store={store}>
+    <Router>
+        <div>
+            {
+                //Public Routes
+            }
+            <UserHead/>
+            <Route exact path="/customer_register" component={CustomerRegisterForm}/>
+            <Route exact path="/specialist_register" component={SpecialistRegisterForm}/>
+            <Route exact path="/login" component={Login}/>
+            <Route exact path="/" component={MainBanner}/>
+            <Route exact path="/" component={LandingMap}/>
+            {
+                //Private Routes
+            }
+            <Switch>
+                <Route exact path="/createCommission" component={CreateCommission}/>
+                <Route exact path="/createOpinion" component={CreateOpinion}/>
+                <Route exact path="/editCommission/:commissionId" component={EditCommission}/>
+                <Route exact path="/commissionDashboard" component={CommissionDashboard}/>
+                <Route exact path="/searchCommissions" component={Commissions}/>
+                <Route exact path="/searchSpecialists" component={Specialists}/>
+                <Route exact path="/profile" component={Profile}/>
+            </Switch>
 
-{/*            {*/}
-{/*                //Public Routes*/}
-{/*            }*/}
+            <StaticFooter/>
+        </div>
+        {/*<Route exact path="/" component={Profile}/>*/}
+    </Router>
+
+</Provider>
 
 
-{/*            {*/}
-{/*                //Private Routes*/}
-{/*            }*/}
-
-{/*            <Switch>*/}
-{/*                <Route exact path="/"/>*/}
-
-
-{/*            </Switch>*/}
-
-{/*        </div>*/}
-{/*    </Router>*/}
-{/*</Provider>*/}
-
-                <UserHeader/>
-                {/*<Route exact path="/" component={MainBanner}/>*/}
-                {/*<Route exact path="/" component={Map}/>*/}
-                {/*<Route exact path="/login" component={LoginForm}/>*/}
-                {/*<Route exact path="/customer_register" component={CustomerRegisterForm} />*/}
-                <CommissionForm />
-                <StaticFooter/>
     </div>
   );
 }

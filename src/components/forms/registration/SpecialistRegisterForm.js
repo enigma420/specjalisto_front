@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -16,26 +15,11 @@ import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Paper from '@material-ui/core/Paper';
 import RadioGroup from "@material-ui/core/RadioGroup";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-
-
-export const useInput = initialValue => {
-    const [value, setValue] = useState(initialValue);
-
-    return {
-        value,
-        setValue,
-        reset: () => setValue(""),
-        bind: {
-            value,
-            onChange: event => {
-                setValue(event.target.value);
-            }
-        }
-    };
-};
+import ConfirmationTokenService from "../../../services/ConfirmationTokenService";
+import {applyMiddleware as dispatch} from "redux";
+import classnames from "classnames";
+import SpecialistService from "../../../services/SpecialistService";
+import CustomerService from "../../../services/CustomerService";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -111,14 +95,162 @@ function getStepContent(step) {
 }
 
 
-export default function SpecialistRegisterForm(props) {
-    const { val, bind, reset } = useInput('');
-    const handleSubmit = (evt) => {
-        evt.preventDefault();
-        alert(`Submitting Name ${value}`);
-        reset();
+export default function SpecialistRegisterForm() {
+
+    const initialSpecialistState = {
+        name: '',
+        surname:'',
+        province:'',
+        city: '',
+        profession: '',
+        phoneNumber: '',
+        mail: '',
+        confirmMail: '',
+        password: '',
+        confirmPassword: '',
+    };
+
+    const initialSpecialistToken = {
+        token: ''
+    };
+
+    const [specialist, setSpecialist] = useState(initialSpecialistState);
+    const [submitted, setSubmitted] = useState(false);
+    const [confirmationKey,setConfirmationKey] = useState(initialSpecialistToken);
+    // const [confirmationInputMail, setConfirmationInputMail] = useState(false)
+    // const [confirmationInputPassword, setConfirmationInputPassword] = useState(false)
+    const [errors, setErrors] = useState({
+        name: '',
+        surname:'',
+        province:'',
+        city: '',
+        profession: '',
+        phoneNumber: '',
+        mail: '',
+        confirmMail: '',
+        password: '',
+        confirmPassword: '',
+    });
+
+    const [wrongConfirmationToken,setWrongConfirmationToken] = useState({
+        token: ""
+    });
+
+    const handleInputChange = (e) => {
+        const {name, value} = e.target;
+        setSpecialist({...specialist, [name]: value});
+    };
+
+    const handleInputChangeSecond = (e) => {
+        const{name, value} = e.target;
+        setConfirmationKey({...confirmationKey, [name]: value})
     }
 
+    const saveConfirmationKey = () => {
+        var data = {
+            token: confirmationKey.token
+        };
+        ConfirmationTokenService.create(data.token,"specialist")
+            .then(response => {
+                // console.log("first: " + data.token)
+                // console.log("second: "+ data.token.token)
+                // console.log("third: "+ data.token.token.token)
+                // console.log("fourth: "+ response)
+                // console.log("fifth: "+ response.data)
+                // console.log("sixth: "+ response.token)
+                // console.log("sixth: "+ data)
+                // console.log("sixth: "+ data[0])
+                // console.log("sixth: "+ data[1])
+                // console.log("sixth: "+ response.data)
+                // console.log("sixth: "+ response.data[0])
+                // console.log("sixth: "+ response.data[1])
+                // console.log("sixth: "+ response.data.token)
+                // console.log("sixth: "+ response.data.token[0])
+                // console.log("sixth: "+ response.data.token[1])
+                // console.log("sixth: "+ response.data.token.token)
+                dispatch(setConfirmationKey({
+
+                    token: response.data.token
+                }));
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+            })
+
+            // console.log("token: " + data.token)
+            .catch(function (error) {
+                if (error.response) {
+                    setWrongConfirmationToken(error.response.data)
+                    console.log(error.response.data.message)
+                }
+            })
+    };
+
+    const saveSpecialist = () => {
+        var data = {
+            name: specialist.name,
+            surname: specialist.surname,
+            province: specialist.province,
+            city: specialist.city,
+            profession: specialist.profession,
+            phoneNumber: specialist.phoneNumber,
+            mail: specialist.mail,
+            confirmMail: specialist.confirmMail,
+            password: specialist.password,
+            confirmPassword: specialist.confirmPassword,
+        };
+
+        SpecialistService.create(data)
+            .then(response => {
+                dispatch(setSpecialist({
+                    name: response.data.name,
+                    surname: response.data.surname,
+                    province: response.data.province,
+                    city: response.data.city,
+                    profession: response.data.profession,
+                    phoneNumber: response.data.phoneNumber,
+                    mail: response.data.mail,
+                    confirmMail: response.data.confirmMail,
+                    password: response.data.password,
+                    confirmPassword: response.data.confirmPassword
+                }));
+                // if(checkConfirmationMail(customer.mail,customer.confirmMail) &&
+                //     checkConfirmationPassword(customer.password,customer.confirmPassword)){
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+                // setSubmitted(true);
+                // }
+            })
+            /*first way*/
+            .catch(function (error) {
+                if (error.response) {
+                    setErrors(error.response.data)
+                    console.log(error.response.data);
+                    console.log("name error: " + error.response.data.name);
+                    console.log("surname error: " + error.response.data.surname);
+                    console.log("province error: " + error.response.data.province);
+                    console.log("city error: " + error.response.data.city);
+                    console.log("profession error: " + error.response.data.profession);
+                    console.log("phoneNumber error: " + error.response.data.phoneNumber);
+                    console.log("mail error: " + error.response.data.mail);
+                    console.log("confirmMail error: " + error.response.data.confirmMail);
+                    console.log("password error: " + error.response.data.password);
+                    console.log("confirmPassword error: " + error.response.data.confirmPassword);
+
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                }
+            })
+        /*second way*/
+        // .catch(function (error) {
+        //     console.log(JSON.stringify(error.response.data.title))
+        //     console.log(JSON.stringify(error.response.data.city))
+        //     console.log(JSON.stringify(error.response.data.profession))
+        //     console.log(JSON.stringify(error.response.data.description))
+        // })
+        /*third way*/
+        // .catch((error) => {
+        //     console.log({...error})
+        // })
+    };
+    //
 
     const classes = useStyles();
     const [value, setValue] = React.useState('female');
@@ -129,14 +261,16 @@ export default function SpecialistRegisterForm(props) {
     const registerFirstStep = () => {
         return (
             <Paper md={5} style={{padding: '20px', minWidth: '550px'}}>
-                <form onSubmit={handleSubmit}>
+                <form>
                     <Grid container spacing={3}>
                         <Grid item xs={8} sm={4}>
                             <TextField
                                 type="text"
-                                {...bind}
+                                onChange={handleInputChange}
+                                error={!!errors.name}
+                                value={specialist.name}
                                 autoComplete="fname"
-                                name="firstName"
+                                name="name"
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -150,18 +284,29 @@ export default function SpecialistRegisterForm(props) {
                                         focused: classes.labelFocused
                                     }
                                 }}
+                                className={classnames("form-control form-control-lg", {
+                                    "is-invalid": errors.name
+                                })}
                             />
+                            {errors.name && (
+                                <div className="invalid-feedback"
+                                     style={{textAlign: 'center', marginTop: "15px", fontSize: "13px"}}>
+                                    {errors.name}
+                                </div>
+                            )}
                         </Grid>
                         <Grid item xs={8} sm={4}>
                             <TextField
                                 type="text"
-                                {...bind}
+                                onChange={handleInputChange}
+                                value={specialist.surname}
+                                error={!!errors.surname}
                                 variant="outlined"
                                 required
                                 fullWidth
                                 id="lastName"
                                 label="Nazwisko"
-                                name="lastName"
+                                name="surname"
                                 autoComplete="lname"
                                 InputProps={{classes: {root: classes.inputRoot}}}
                                 InputLabelProps={{
@@ -170,7 +315,16 @@ export default function SpecialistRegisterForm(props) {
                                         focused: classes.labelFocused
                                     }
                                 }}
+                                className={classnames("form-control form-control-lg", {
+                                    "is-invalid": errors.surname
+                                })}
                             />
+                            {errors.surname && (
+                                <div className="invalid-feedback"
+                                     style={{textAlign: 'center', marginTop: "15px", fontSize: "13px"}}>
+                                    {errors.surname}
+                                </div>
+                            )}
                         </Grid>
                         <Grid item sm={4}>
                             <RadioGroup row aria-label="gender" name="gender1" onChange={handleChange}>
@@ -183,14 +337,14 @@ export default function SpecialistRegisterForm(props) {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 type="text"
-                                {...bind}
+                                onChange={handleInputChange}
+                                value={specialist.city}
+                                error={!!errors.city}
                                 variant="outlined"
                                 required
                                 fullWidth
-                                name="miasto"
+                                name="city"
                                 label="Miasto"
-                                id="city"
-                                autoComplete="cities"
                                 InputProps={{classes: {root: classes.inputRoot}}}
                                 InputLabelProps={{
                                     classes: {
@@ -198,12 +352,23 @@ export default function SpecialistRegisterForm(props) {
                                         focused: classes.labelFocused
                                     }
                                 }}
+                                className={classnames("form-control form-control-lg", {
+                                    "is-invalid": errors.city
+                                })}
                             />
+                            {errors.city && (
+                                <div className="invalid-feedback"
+                                     style={{textAlign: 'center', marginTop: "15px", fontSize: "13px"}}>
+                                    {errors.city}
+                                </div>
+                            )}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 type="text"
-                                {...bind}
+                                onChange={handleInputChange}
+                                value={specialist.province}
+                                error={!!errors.province}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -217,18 +382,29 @@ export default function SpecialistRegisterForm(props) {
                                         focused: classes.labelFocused
                                     }
                                 }}
+                                className={classnames("form-control form-control-lg", {
+                                    "is-invalid": errors.province
+                                })}
                             />
+                            {errors.province && (
+                                <div className="invalid-feedback"
+                                     style={{textAlign: 'center', marginTop: "15px", fontSize: "13px"}}>
+                                    {errors.province}
+                                </div>
+                            )}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 type="text"
-                                {...bind}
+                                onChange={handleInputChange}
+                                value={specialist.mail}
+                                error={!!errors.mail}
                                 variant="outlined"
                                 required
                                 fullWidth
                                 id="email"
                                 label="Adres Email"
-                                name="email"
+                                name="mail"
                                 autoComplete="email"
                                 InputProps={{classes: {root: classes.inputRoot}}}
                                 InputLabelProps={{
@@ -237,18 +413,29 @@ export default function SpecialistRegisterForm(props) {
                                         focused: classes.labelFocused
                                     }
                                 }}
+                                className={classnames("form-control form-control-lg", {
+                                    "is-invalid": errors.mail
+                                })}
                             />
+                            {errors.mail && (
+                                <div className="invalid-feedback"
+                                     style={{textAlign: 'center', marginTop: "15px", fontSize: "13px"}}>
+                                    {errors.mail}
+                                </div>
+                            )}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 type="text"
-                                {...bind}
+                                onChange={handleInputChange}
+                                value={specialist.confirmMail}
+                                error={specialist.mail !== specialist.confirmMail}
                                 variant="outlined"
                                 required
                                 fullWidth
                                 id="email"
                                 label="Potwierdź Adres Email"
-                                name="confirmEmail"
+                                name="confirmMail"
                                 InputProps={{classes: {root: classes.inputRoot}}}
                                 InputLabelProps={{
                                     classes: {
@@ -256,12 +443,15 @@ export default function SpecialistRegisterForm(props) {
                                         focused: classes.labelFocused
                                     }
                                 }}
+
                             />
+
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
-
-                                {...bind}
+                                onChange={handleInputChange}
+                                value={specialist.password}
+                                error={!!errors.password}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -269,7 +459,6 @@ export default function SpecialistRegisterForm(props) {
                                 label="Hasło"
                                 type="password"
                                 id="password"
-                                autoComplete="current-password"
                                 InputProps={{classes: {root: classes.inputRoot}}}
                                 InputLabelProps={{
                                     classes: {
@@ -277,16 +466,26 @@ export default function SpecialistRegisterForm(props) {
                                         focused: classes.labelFocused
                                     }
                                 }}
+                                className={classnames("form-control form-control-lg", {
+                                    "is-invalid": errors.name
+                                })}
                             />
+                            {errors.name && (
+                                <div className="invalid-feedback"
+                                     style={{textAlign: 'center', marginTop: "15px", fontSize: "13px"}}>
+                                    {errors.name}
+                                </div>
+                            )}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
-                                type="text"
-                                {...bind}
+                                onChange={handleInputChange}
+                                value={specialist.confirmPassword}
+                                error={specialist.password !== specialist.confirmPassword}
                                 variant="outlined"
                                 required
                                 fullWidth
-                                name="password"
+                                name="confirmPassword"
                                 label="Potwierdź Hasło"
                                 type="password"
                                 id="confirmPassword"
@@ -302,7 +501,9 @@ export default function SpecialistRegisterForm(props) {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 type="text"
-                                {...bind}
+                                onChange={handleInputChange}
+                                value={specialist.profession}
+                                error={!!errors.profession}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -317,7 +518,16 @@ export default function SpecialistRegisterForm(props) {
                                     },
                                     shrink:true
                                 }}
+                                className={classnames("form-control form-control-lg", {
+                                    "is-invalid": errors.profession
+                                })}
                             />
+                            {errors.profession && (
+                                <div className="invalid-feedback"
+                                     style={{textAlign: 'center', marginTop: "15px", fontSize: "13px"}}>
+                                    {errors.profession}
+                                </div>
+                            )}
                         </Grid>
                         {/*<Grid item xs={12} sm={6}>*/}
                         {/*    <FormControl variant="outlined" className={classes.formControl}>*/}
@@ -342,33 +552,44 @@ export default function SpecialistRegisterForm(props) {
                         {/*        </Select>*/}
                         {/*    </FormControl>*/}
                         {/*</Grid>*/}
+                        {/*<Grid item xs={12} sm={6}>*/}
+                        {/*    <TextField*/}
+                        {/*        type="text"*/}
+                        {/*        {...bind}*/}
+                        {/*        variant="outlined"*/}
+                        {/*        required*/}
+                        {/*        fullWidth*/}
+                        {/*        name="education"*/}
+                        {/*        label="Wyksztalcenie"*/}
+                        {/*        id="educationStage"*/}
+                        {/*        InputProps={{classes: {root: classes.inputRoot}}}*/}
+                        {/*        InputLabelProps={{*/}
+                        {/*            classes: {*/}
+                        {/*                root: classes.labelRoot,*/}
+                        {/*                focused: classes.labelFocused*/}
+                        {/*            }*/}
+                        {/*        }}*/}
+                        {/*        className={classnames("form-control form-control-lg", {*/}
+                        {/*            "is-invalid": errors.name*/}
+                        {/*        })}*/}
+                        {/*    />*/}
+                        {/*    {errors.name && (*/}
+                        {/*        <div className="invalid-feedback"*/}
+                        {/*             style={{textAlign: 'center', marginTop: "85px", fontSize: "13px"}}>*/}
+                        {/*            {errors.name}*/}
+                        {/*        </div>*/}
+                        {/*    )}*/}
+                        {/*</Grid>*/}
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 type="text"
-                                {...bind}
+                                onChange={handleInputChange}
+                                value={specialist.phoneNumber}
+                                error={!!errors.phoneNumber}
                                 variant="outlined"
                                 required
                                 fullWidth
-                                name="education"
-                                label="Wyksztalcenie"
-                                id="educationStage"
-                                InputProps={{classes: {root: classes.inputRoot}}}
-                                InputLabelProps={{
-                                    classes: {
-                                        root: classes.labelRoot,
-                                        focused: classes.labelFocused
-                                    }
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                type="text"
-                                {...bind}
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="phone"
+                                name="phoneNumber"
                                 label="Numer Telefonu"
                                 id="phoneNumber"
                                 InputProps={{classes: {root: classes.inputRoot}}}
@@ -378,7 +599,16 @@ export default function SpecialistRegisterForm(props) {
                                         focused: classes.labelFocused
                                     }
                                 }}
+                                className={classnames("form-control form-control-lg", {
+                                    "is-invalid": errors.phoneNumber
+                                })}
                             />
+                            {errors.phoneNumber && (
+                                <div className="invalid-feedback"
+                                     style={{textAlign: 'center', marginTop: "15px", fontSize: "13px"}}>
+                                    {errors.phoneNumber}
+                                </div>
+                            )}
                         </Grid>
                         <Grid item xs={12}>
                             <hr/>
@@ -398,11 +628,10 @@ export default function SpecialistRegisterForm(props) {
                         <div style={{textAlign: 'center'}}>
                                 <span style={{margin: '5px'}}>
                                                     <Button
-                                                        type="submit"
-                                                        value="Submit"
+
                                                         variant="contained"
                                                         color="secondary"
-                                                        onClick={handleNext}
+                                                        onClick={saveSpecialist}
                                                         className={classes.submit}
                                                         fullWidth
                                                         classes={{label: classes.checkboxLabel}}
@@ -426,17 +655,17 @@ export default function SpecialistRegisterForm(props) {
     const registerConfirmationSecondStep = () => {
         return (
             <Paper md={5} style={{padding: '20px'}}>
-                <Typography align="center" style={{padding: '5px', fontSize: '22px', fontWeight: 'bolder'}}>Proszę
+                <Typography style={{padding: '5px', fontSize: '22px', fontWeight: 'bolder'}}>Proszę
                     wprowadzić kod potwierdzający wysłany na Email</Typography>
                 <div style={{textAlign: 'center'}}>
                     <TextField
                         style={{margin: '5px', width: '50%'}}
                         variant="outlined"
+                        onChange={handleInputChangeSecond}
+                        value={confirmationKey.token}
                         required
-                        name="confirmMailCode"
+                        name="token"
                         label="Kod Potwierdzający"
-                        className={classes.submit}
-                        type="password"
                         InputProps={{classes: {root: classes.inputRoot}}}
                         InputLabelProps={{
                             classes: {
@@ -444,12 +673,21 @@ export default function SpecialistRegisterForm(props) {
                                 focused: classes.labelFocused
                             }
                         }}
+                        className={classnames("form-control form-control-lg", {
+                            "is-invalid": wrongConfirmationToken.message
+                        })}
                     />
+                    {wrongConfirmationToken.message && (
+                        <div className="invalid-feedback"
+                             style={{textAlign: 'center', marginTop: "85px", fontSize: "13px"}}>
+                            {wrongConfirmationToken.message}
+                        </div>
+                    )}
                     <Button
-                        style={{margin: '5px'}}
+                        style={{margin: '25px'}}
                         variant="contained"
                         color="secondary"
-                        onClick={handleNext}
+                        onClick={saveConfirmationKey}
                         fullWidth
                         classes={{label: classes.checkboxLabel}}
                     >
@@ -463,7 +701,6 @@ export default function SpecialistRegisterForm(props) {
                         </Grid>
                     </Grid>
                 </div>
-
             </Paper>
         )
     };
@@ -512,7 +749,7 @@ export default function SpecialistRegisterForm(props) {
     // };
 
     return (
-        <Paper md={3} style={{padding: '80px 0 0 150px'}}>
+        <Paper md={3}>
             <div className={classes.paper} style={{width: '60%', margin: '0 auto'}}>
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon fontSize="large"/>
