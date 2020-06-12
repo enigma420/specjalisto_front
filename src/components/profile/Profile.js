@@ -2,23 +2,25 @@ import React, {Component} from 'react';
 import Panel from "./Panel";
 import {Col, Container, Row, Footer} from 'mdbreact';
 import PriceList from "./PriceList";
-import ModifyProfilePanel from "./ModifyProfilePanel"
+import OpinionAndRatingPanel from "./OpinionAndRatingPanel"
 import ProfileGallery from "./ProfileGallery";
 
 class Profile extends Component {
     render() {
         return (
-            <div style={{padding: '100px 0 0 0' , display:'inline-block'}}>
+            <div style={{padding: '100px 0 0 0' }}>
                 <Row>
                     <Col md={1}>
 
                     </Col>
                     <Col md={4}>
                         <Panel/>
-                        <ModifyProfilePanel/>
+
+
+                        <OpinionAndRatingPanel/>
                     </Col>
                 <hr/>
-                    <Col md={5}>
+                    <Col style={{maxWidth:"750px"}}>
                     <PriceList/>
                         <ProfileGallery/>
 
@@ -32,5 +34,7 @@ class Profile extends Component {
         );
     }
 }
+
+
 
 export default Profile;

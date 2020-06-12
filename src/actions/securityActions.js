@@ -2,75 +2,75 @@ import axios from "axios";
 import {GET_ERRORS,SET_CURRENT_USER} from "./types";
 import setJwtToken from "../security/setJwtToken";
 import jwt_decode from "jwt-decode";
-
-export const registerSpecialist = (newSpecialist, history) => async dispatch => {
-    try{
-        await axios.post("/api/auth/register/specialist",newSpecialist);
-        // history.push("/login");
-        dispatch({
-            type: GET_ERRORS,
-            payload: {}
-        })
-    }catch (err) {
-        dispatch({
-            type:GET_ERRORS,
-            payload: err.response.data
-        })
-    }
-};
-
-export const registerCustomer = (newCustomer, history) => async dispatch => {
-    try{
-        await axios.post("/api/auth/register/customer",newCustomer);
-        // history.push("/login");
-        dispatch({
-            type: GET_ERRORS,
-            payload: {}
-        })
-    }catch (err) {
-        dispatch({
-            type:GET_ERRORS,
-            payload: err.response.data
-        })
-    }
-};
-
-export const confirmConfirmationRegisterSpecialist = () => async dispatch => {
-    try{
-        await axios.post("/api/auth/register/specialist/confirm");
-        // history.push("/login");
-        dispatch({
-            type:GET_ERRORS,
-            payload: {}
-        })
-    }catch (err) {
-        dispatch({
-            type:GET_ERRORS,
-            payload: err.response.data
-        })
-    }
-};
-
-export const confirmConfirmationRegisterCustomer = () => async dispatch => {
-    try{
-        await axios.post("/api/auth/register/customer/confirm");
-        // history.push("/login");
-        dispatch({
-            type:GET_ERRORS,
-            payload: {}
-        })
-    }catch (err) {
-        dispatch({
-            type:GET_ERRORS,
-            payload: err.response.data
-        })
-    }
-};
+/* DONE WITH HOOKS */
+// export const registerSpecialist = (newSpecialist, history) => async dispatch => {
+//     try{
+//         await axios.post("/api/auth/register/specialist",newSpecialist);
+//         // history.push("/login");
+//         dispatch({
+//             type: GET_ERRORS,
+//             payload: {}
+//         })
+//     }catch (err) {
+//         dispatch({
+//             type:GET_ERRORS,
+//             payload: err.response.data
+//         })
+//     }
+// };
+//
+// export const registerCustomer = (newCustomer, history) => async dispatch => {
+//     try{
+//         await axios.post("/api/auth/register/customer",newCustomer);
+//         // history.push("/login");
+//         dispatch({
+//             type: GET_ERRORS,
+//             payload: {}
+//         })
+//     }catch (err) {
+//         dispatch({
+//             type:GET_ERRORS,
+//             payload: err.response.data
+//         })
+//     }
+// };
+//
+// export const confirmConfirmationRegisterSpecialist = () => async dispatch => {
+//     try{
+//         await axios.post("/api/auth/register/specialist/confirm");
+//         // history.push("/login");
+//         dispatch({
+//             type:GET_ERRORS,
+//             payload: {}
+//         })
+//     }catch (err) {
+//         dispatch({
+//             type:GET_ERRORS,
+//             payload: err.response.data
+//         })
+//     }
+// };
+//
+// export const confirmConfirmationRegisterCustomer = () => async dispatch => {
+//     try{
+//         await axios.post("/api/auth/register/customer/confirm");
+//         // history.push("/login");
+//         dispatch({
+//             type:GET_ERRORS,
+//             payload: {}
+//         })
+//     }catch (err) {
+//         dispatch({
+//             type:GET_ERRORS,
+//             payload: err.response.data
+//         })
+//     }
+// };
 
 export const login = LoginRequest => async dispatch => {
     try{
         /*POST => Login Request*/
-        const res = await axios.post("/api/auth/login", LoginRequest);
+        const res = await axios.post("http://localhost:8080/api/auth/login", LoginRequest);
         /*Extract token from res.data*/
         const{token} = res.data;
         /*Store the token in the localStorage*/
@@ -85,10 +85,11 @@ export const login = LoginRequest => async dispatch => {
             payload: decoded
         });
     }catch (err) {
-        dispatch({
-            type:GET_ERRORS,
-            payload:err.response.data
-        });
+        console.log("error: " + err)
+        // dispatch({
+        //     type:GET_ERRORS,
+        //     payload:err.response.data
+        // });
     }
 };
 

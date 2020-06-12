@@ -71,15 +71,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Panel() {
+export default function Panel(props) {
     const classes = useStyles();
-
     return (
             <ExpansionPanel defaultExpanded style={{background: '#ffe6e6', border: '2px solid #fa8484',minWidth:'720px',fontSize:'12px'}}>
                     <div  className="row" style={{padding:'5px 5px 5px 20px'}}>
                         <img src={photo} height="150px" style={{borderRadius:'10px',border:'1px solid #fa8484'}}/>
                         <div style={{textAlign:'center',padding:'5px'}}>
-                        <Typography className={classes.heading}>Joanna Zawadka</Typography>
+                        <Typography className={classes.heading}>Adrianna Zawadzka</Typography>
                             <Rating name="read-only" value={2} size="medium" readOnly />
                             <Typography variant="h6">8 Opinii</Typography>
                             <div className={classes.column}>
@@ -123,3 +122,7 @@ export default function Panel() {
             </ExpansionPanel>
     );
 }
+
+
+
+

@@ -30,12 +30,16 @@ import Avatar from "@material-ui/core/Avatar";
 import avatar from "../../avatar.jpg"
 import Rating from '@material-ui/lab/Rating';
 import Logo from "../small_components/Logo";
+import {Link} from "react-router-dom";
+import {logout} from "../../actions/securityActions";
+import PropTypes from "prop-types";
+import {connect} from "react-redux";
 
 const drawerWidth = 200;
 
 const theme = createMuiTheme({
     palette: {
-        primary:red
+        primary: red
     },
 });
 
@@ -176,7 +180,8 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-export default function SpecialistHeader(){
+function SpecialistHeader(props) {
+
     const classes = useStyles();
 
     /*Specialist Rating value*/
@@ -214,10 +219,10 @@ export default function SpecialistHeader(){
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}w
+            anchorOrigin={{vertical: 'top', horizontal: 'right'}} w
             id={menuId}
             keepMounted
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            transformOrigin={{vertical: 'top', horizontal: 'right'}}
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
@@ -230,17 +235,17 @@ export default function SpecialistHeader(){
     const renderMobileMenu = (
         <Menu
             anchorEl={mobileMoreAnchorEl}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            anchorOrigin={{vertical: 'top', horizontal: 'right'}}
             id={mobileMenuId}
             keepMounted
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            transformOrigin={{vertical: 'top', horizontal: 'right'}}
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
             <MenuItem>
                 <IconButton aria-label="show 4 new mails" color="inherit">
                     <Badge badgeContent={2} color="secondary">
-                        <MailIcon />
+                        <MailIcon/>
                     </Badge>
                 </IconButton>
                 <p>Messages</p>
@@ -248,7 +253,7 @@ export default function SpecialistHeader(){
             <MenuItem>
                 <IconButton aria-label="show 11 new notifications" color="inherit">
                     <Badge badgeContent={11} color="secondary">
-                        <NotificationsIcon />
+                        <NotificationsIcon/>
                     </Badge>
                 </IconButton>
                 <p>Notifications</p>
@@ -260,136 +265,184 @@ export default function SpecialistHeader(){
                     aria-haspopup="true"
                     color="inherit"
                 >
-                    <AccountCircle />
+                    <AccountCircle/>
                 </IconButton>
                 <p>Profile</p>
             </MenuItem>
         </Menu>
     );
+    const logout = () => {
+        props.logout();
+        window.location.href = "/";
+    };
+
 
     return (
         <MuiThemeProvider theme={theme}>
-        <div className={classes.grow}>
-            <CssBaseline />
-            <AppBar
-                position="fixed"
-                className={clsx(classes.appBar, {
-                    [classes.appBarShift]: open,
-                })}>
-                <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        className={clsx(classes.menuButton, {
-                            [classes.hide]: open,
-                        })}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                   <Logo/>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
-                        </div>
-                        <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </div>
-                    <div className={classes.grow} />
-                    <div className={classes.sectionDesktop}>
-                        <IconButton aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <MailIcon fontSize="inherit" style={{fontSize:'36px'}}/>
-                            </Badge>
-                        </IconButton>
-                        <IconButton aria-label="show 17 new notifications" color="inherit">
-                            <Badge badgeContent={17} color="secondary">
-                                <NotificationsIcon fontSize="inherit" style={{fontSize:'36px'}}/>
-                            </Badge>
-                        </IconButton>
+            <div className={classes.grow}>
+                <CssBaseline/>
+                <AppBar
+                    position="fixed"
+                    className={clsx(classes.appBar, {
+                        [classes.appBarShift]: open,
+                    })}>
+                    <Toolbar>
                         <IconButton
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
                             color="inherit"
+                            aria-label="open drawer"
+                            onClick={handleDrawerOpen}
+                            edge="start"
+                            className={clsx(classes.menuButton, {
+                                [classes.hide]: open,
+                            })}
                         >
-                            <AccountCircle fontSize="inherit" style={{fontSize:'36px'}}/>
+                            <MenuIcon/>
                         </IconButton>
-                        <IconButton
-                            >
-                            <div className="column">
-                                <div className="row">
-                                    <Avatar alt="Travis Howard" src={avatar} style={{left:'20%'}} />
-                                </div>
-                                <div className="row">
-                                    <Rating name="read-only" value={value} size="medium" readOnly />
-                                </div>
+                        <Logo/>
+                        <div className={classes.search}>
+                            <div className={classes.searchIcon}>
+                                <SearchIcon/>
                             </div>
-                        </IconButton>
-                    </div>
-                    <div className={classes.sectionMobile}>
-                        <IconButton
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>
+                            <InputBase
+                                placeholder="Search…"
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{'aria-label': 'search'}}
+                            />
+                        </div>
+                        <div className={classes.grow}/>
+                        <div className={classes.sectionDesktop}>
+                            <IconButton aria-label="show 4 new mails" color="inherit">
+                                <Badge badgeContent={4} color="secondary">
+                                    <MailIcon fontSize="inherit" style={{fontSize: '36px'}}/>
+                                </Badge>
+                            </IconButton>
+                            <IconButton aria-label="show 17 new notifications" color="inherit">
+                                <Badge badgeContent={17} color="secondary">
+                                    <NotificationsIcon fontSize="inherit" style={{fontSize: '36px'}}/>
+                                </Badge>
+                            </IconButton>
+                            <IconButton
+                                aria-label="account of current user"
+                                aria-controls={menuId}
+                                aria-haspopup="true"
+                                onClick={handleProfileMenuOpen}
+                                color="inherit"
+                            >
+                                <AccountCircle fontSize="inherit" style={{fontSize: '36px'}}/>
+                            </IconButton>
+                            <IconButton
+                            >
+                                <div className="column">
+                                    <div className="row">
+                                        <Avatar alt="Travis Howard" src={avatar} style={{left: '20%'}}/>
+                                    </div>
+                                    <div className="row">
+                                        <Rating name="read-only" value={value} size="medium" readOnly/>
+                                    </div>
+                                </div>
+                            </IconButton>
+                            <IconButton>
+                                <Link
+                                    id="logout"
+                                    className="nav-link"
+                                    to="/logout"
+                                    onClick={logout}
+                                >
+                                    <i className="fa fa-sign-out">
+                                        &nbsp;
+                                    </i>
+                                </Link>
+                            </IconButton>
 
-                    </div>
-                </Toolbar>
-            </AppBar>
-            {renderMobileMenu}
-            {renderMenu}
-            <Drawer
-                variant="permanent"
-                className={clsx(classes.drawer, {
-                    [classes.drawerOpen]: open,
-                    [classes.drawerClose]: !open,
-                })}
-                classes={{
-                    paper: clsx({
+
+                        </div>
+                        <div className={classes.sectionMobile}>
+                            <IconButton
+                                aria-label="show more"
+                                aria-controls={mobileMenuId}
+                                aria-haspopup="true"
+                                onClick={handleMobileMenuOpen}
+                                color="inherit"
+                            >
+                                <MoreIcon/>
+                            </IconButton>
+
+                        </div>
+                    </Toolbar>
+                </AppBar>
+                {renderMobileMenu}
+                {renderMenu}
+                <Drawer
+                    variant="permanent"
+                    className={clsx(classes.drawer, {
                         [classes.drawerOpen]: open,
                         [classes.drawerClose]: !open,
-                    }),
-                }}
-            >
-                <div className={classes.toolbar}>
-                    <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-                    </IconButton>
-                </div>
-                <Divider />
-                <List>
-                    {['Wyszukiwarka','Moje Zlecenia'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <SearchIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
+                    })}
+                    classes={{
+                        paper: clsx({
+                            [classes.drawerOpen]: open,
+                            [classes.drawerClose]: !open,
+                        }),
+                    }}
+                >
+                    <div className={classes.toolbar}>
+                        <IconButton onClick={handleDrawerClose}>
+                            {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
+                        </IconButton>
+                    </div>
+                    <Divider/>
+                    {/*<List>*/}
+                    {/*    {['Wyszukiwarka', 'Moje Zlecenia'].map((text, index) => (*/}
+                    {/*        <ListItem button key={text}>*/}
+                    {/*            <ListItemIcon>{index % 2 === 0 ? <SearchIcon/> : <MailIcon/>}</ListItemIcon>*/}
+                    {/*            <ListItemText primary={text}/>*/}
+                    {/*        </ListItem>*/}
+                    {/*    ))}*/}
+                    {/*</List>*/}
+                    <Divider/>
+                    <List>
+                        <Link to="/profile">
+                        <ListItem button>
+                            <ListItemIcon> <InboxIcon/></ListItemIcon>
+                            <ListItemText primary="Moj Profil"/>
                         </ListItem>
-                    ))}
-                </List>
-                <Divider />
-                <List>
-                    {['Moj Profil','Wiadomosci','Ustawienia'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
+                        </Link>
+                        <Link to="/commissionDashboard">
+                        <ListItem button>
+                            <ListItemIcon><MailIcon/></ListItemIcon>
+                            <ListItemText primary="Moje Zlecenia"/>
                         </ListItem>
-                    ))}
-                </List>
-            </Drawer>
-        </div>
+                        </Link>
+                        <Link to="/searchCommissions">
+                        <ListItem button>
+                            <ListItemIcon><InboxIcon/></ListItemIcon>
+                            <ListItemText primary="Szukaj Zleceń"/>
+                        </ListItem>
+                        </Link>
+                        <Link to="/searchSpecialists">
+                            <ListItem button>
+                                <ListItemIcon><InboxIcon/></ListItemIcon>
+                                <ListItemText primary="Szukaj Specjalistow"/>
+                            </ListItem>
+                        </Link>
+                    </List>
+                </Drawer>
+            </div>
         </MuiThemeProvider>
     );
 
 }
+
+SpecialistHeader.propTypes = {
+    logout: PropTypes.func.isRequired,
+    security: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    security: state.security
+});
+
+export default connect(mapStateToProps, {logout})(SpecialistHeader);
