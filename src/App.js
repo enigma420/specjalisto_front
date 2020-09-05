@@ -17,6 +17,7 @@ import MainBanner from "./components/MainBanner";
 import LoginForm from "./components/forms/login/LoginForm";
 import CustomerRegisterForm from "./components/forms/registration/CustomerRegisterForm";
 import SpecialistRegisterForm from "./components/forms/registration/SpecialistRegisterForm";
+import CommissionsForm, {AddCommission} from "./components/forms/commission/AddCommission";
 import CommissionForm from "./components/forms/commission/CommissionForm";
 
 const jwtToken = localStorage.jwtToken;
@@ -42,7 +43,7 @@ function App() {
 
   return (
     <div className="App">
-{/*<Provider store={store}>*/}
+<Provider store={store}>
 {/*    <Router>*/}
 {/*        <div>*/}
 
@@ -63,15 +64,16 @@ function App() {
 
 {/*        </div>*/}
 {/*    </Router>*/}
-{/*</Provider>*/}
+    <UserHeader/>
+    {/*<Route exact path="/" component={MainBanner}/>*/}
+    {/*<Route exact path="/" component={Map}/>*/}
+    {/*<Route exact path="/login" component={LoginForm}/>*/}
+    {/*<Route exact path="/customer_register" component={CustomerRegisterForm} />*/}
+    < CommissionForm/>
+    <StaticFooter/>
+</Provider>
 
-                <UserHeader/>
-                {/*<Route exact path="/" component={MainBanner}/>*/}
-                {/*<Route exact path="/" component={Map}/>*/}
-                {/*<Route exact path="/login" component={LoginForm}/>*/}
-                {/*<Route exact path="/customer_register" component={CustomerRegisterForm} />*/}
-                <CommissionForm />
-                <StaticFooter/>
+
     </div>
   );
 }

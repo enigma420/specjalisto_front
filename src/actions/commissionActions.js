@@ -5,7 +5,7 @@ import http from "../http-common";
 const createCommission = (commission,history) => async dispatch => {
 
     try {
-        await http.post("/commission/add",commission);
+        await axios.post("http://localhost:8080/api/commission/add",commission);
         history.push("/"); //Set output endpoint
         dispatch({
             type:GET_ERRORS,

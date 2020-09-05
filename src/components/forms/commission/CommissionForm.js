@@ -11,12 +11,13 @@ import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import {createCommission} from '../../../actions/commissionActions'
 import Paper from '@material-ui/core/Paper';
-import {useInput} from "../../hooks/inputFormHook";
 import CommissionService from "../../../services/CommissionService";
 import CommissionActions from "../../../actions/commissionActions";
 import http from "../../../http-common";
 import {GET_ERRORS} from "../../../actions/types";
-
+import WorkIcon from '@material-ui/icons/Work';
+import errorReducer from "../../../reducers/errorReducer";
+import classnames from "classnames";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -69,9 +70,10 @@ export default function CommissionForm() {
     };
 
     const [commission,setCommission] = useState(initialCommissionState);
+    const [error,setError] = useState(false);
     const [submitted,setSubmitted] = useState(false);
     const [isLoadingDuringFilled,setLoadingDuringFilled] = useState(true);
-    const [isLoadingAfterClickCreateCommission, setLoadingAfterClickCreateCommission] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleInputChange = (e) => {
         setLoadingDuringFilled(true);
@@ -79,30 +81,28 @@ export default function CommissionForm() {
         setCommission({...commission, [name]:value});
     };
 
-
-
     const saveCommission = () => {
         var data = {
             title: commission.title,
             description: commission.description,
             city: commission.city,
-            profession: commission.profession
+            profession: commission.profession,
         };
-
-
-
+        setLoading(true);
         CommissionService.create(data)
             .then(response => {
             setCommission({
                 title: response.data.title,
                 description: response.data.description,
                 city: response.data.city,
-                profession: response.data.profession
+                profession: response.data.profession,
+                errors: response.data.errors
             });
             setSubmitted(true);
             console.log(response.data);
             })
 
+        setLoading(false);
     };
 
     const newCommission = () => {
@@ -111,6 +111,7 @@ export default function CommissionForm() {
     };
 
     const registerFirstStep = () => {
+
         return (
             <div>
                 {submitted ? (
@@ -134,7 +135,15 @@ export default function CommissionForm() {
                                     autoFocus
                                     multiline="true"
                                     rows="2"
+                                    className={classnames("form-control form-control-lg" , {
+                                        "is-invalid":response.profession
+                                    })}
                                 />
+                                {errors.title && (
+                                    <div className="invalid-feedback">
+                                        {errors.title}
+                                    </div>
+                                )}
                             </Grid>
 
                             <Grid item xs={12} sm={6}>
@@ -190,17 +199,10 @@ export default function CommissionForm() {
                         >
                             Submit
                         </Button>
-                        <Grid container justify="flex-end">
-                            <Grid item>
-                                <Link href="#" variant="body2">
-                                    Already have an account? Sign in
-                                </Link>
-                            </Grid>
-                        </Grid>
 
                     </div>
                 )}
-
+                {      loading && <div style={{color: `green`}}>"<strong>loading</strong>"</div>    }
             </div>
         )
     };
@@ -210,7 +212,7 @@ export default function CommissionForm() {
                 <div className="col">
                     <div className={classes.paper}>
                         <Avatar className={classes.avatar}>
-                            <LockOutlinedIcon fontSize="large"/>
+                            <WorkIcon fontSize="large"/>
                         </Avatar>
                         <Typography variant="h2" style={{fontWeight:'bolder'}}>
                             Utworzenie Zlecenia
